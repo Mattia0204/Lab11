@@ -4,7 +4,11 @@ from database.dao import DAO
 
 class Model:
     def __init__(self):
-        self.G = nx.Graph()
+        self._nodes = None  # memorizza il numero di nodi del grafo
+        self._lista_nodes = []
+        self._edges = None  # memorizza il numero di archi del grafo
+        self._lista_edges = []
+        self.G = nx.Graph()  # inizializza il grafo vuoto
 
     def build_graph(self, year: int):
         """
@@ -20,7 +24,14 @@ class Model:
         Restituisce la lista dei rifugi presenti nel grafo.
         :return: lista dei rifugi presenti nel grafo.
         """
-        # TODO
+        lista_rifugi = DAO.get_rifugio()  # recupera tutti i rifugi dal database
+        lista_rifugi_distinti = []
+        for rifugio in lista_rifugi.values():  # scorre tutti i rifugi
+            if rifugio.id not in lista_rifugi_distinti:  # verifica se il rifugio è già aggiunto
+                lista_rifugi_distinti.append(rifugio.id)
+                self._lista_nodes.append(rifugio)
+        self._nodes = len(lista_rifugi_distinti)  # calcola il numero totale di nodi
+        return self._lista_nodes
 
     def get_num_neighbors(self, node):
         """
