@@ -100,6 +100,21 @@ class Model:
         """
         if hasattr(start, "nome"):
             start = start.nome
+
+        # METODO 1
+        edges = []
+        visited = set()
+        def dfs(v):
+            for nbr in self.G.neighbors(v):
+                if nbr not in visited:
+                    visited.add(nbr)
+                    edges.append((v, nbr))
+                    dfs(nbr)
+        visited.add(start)
+        dfs(start)
+        #return edges
+
+        # METODO 2
         tree = nx.dfs_tree(self.G, source=start)
         return list(tree.edges())
 
