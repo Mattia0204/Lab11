@@ -26,7 +26,7 @@ class Model:
             # reset per ogni connessione (evita usare valori residui)
             rifugio1 = ""
             rifugio2 = ""
-            if int(connessione.anno) == year:
+            if int(connessione.anno) <= year:
                 for rifugio in dict_rifugi.values():
                     if rifugio.id == connessione.id_rifugio1:
                         rifugio1 = rifugio.nome
@@ -72,14 +72,14 @@ class Model:
         lista_nodi = nx.nodes(self.G)
         for nodo in lista_nodi:
             if nodo not in self._lista_nodes:
+                self._lista_nodes.append(nodo)
                 nuovi_archi = self.get_reachable(nodo)
                 for nuovo_nodo1, nuovo_nodo2 in nuovi_archi:
                     if nuovo_nodo1 not in self._lista_nodes:
                         self._lista_nodes.append(nuovo_nodo1)
-                        n += 1
                     elif nuovo_nodo2 not in self._lista_nodes:
                         self._lista_nodes.append(nuovo_nodo2)
-                        n += 1
+                n += 1
         return n
 
     def get_reachable(self, start):
@@ -98,6 +98,8 @@ class Model:
 
         return a
         """
+        if hasattr(start, "nome"):
+            start = start.nome
         tree = nx.dfs_tree(self.G, source=start)
         return list(tree.edges())
 
